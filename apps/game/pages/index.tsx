@@ -212,6 +212,15 @@ export default function Game() {
   }
 
   const genNewItem = (right: boolean, nSIL, nIAQL) => {
+    if (settings.aiSentencePhase && gamePhase == 2) {
+      let derivedKeys = Object.keys(derivedSentences)
+      if (derivedKeys.length > 0) {
+        return derivedSentences[derivedKeys[genRandomIndex(derivedKeys.length)]].item
+      }
+
+      return null
+    }
+
     const selectNew = (from: any[], exclude?: any[]) => {
       if (from.length == 1) {
         if (exclude && exclude.includes(from[0])) return null
@@ -351,6 +360,8 @@ export default function Game() {
     } else {
       setSelectedItems(originalSelectedItems)
     }
+    setQuestion("")
+    setAnswer("")
     setIncorrectlyAnsweredQuestions([])
     setQuestionElapsed(0)
     setTimerElapsed(0)
