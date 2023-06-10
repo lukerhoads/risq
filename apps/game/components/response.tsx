@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import styles from '../styles/response.module.scss'
 import { closeEnough } from '../util/util'
 import { aiSentenceGrade } from '../ai/mock'
+import james from '../gifs/james.gif'
+import Image from 'next/image'
 
 type DerivedSentence = {
     sentence: string,
@@ -25,6 +27,7 @@ interface ResponseProps {
 
 export default function Response({ answer, isAI, derivedSentences, score, betting, text, possibleAnswers, onAnswer, correctAnswer }: ResponseProps) {
     if (!text && !possibleAnswers) return null 
+    const [showJames, setShowJames] = useState(false)
     const [textResponse, setTextResponse] = useState("")
     const [betAmount, setBetAmount] = useState("")
     const [correctIdx, setCorrectIdx] = useState(null)
@@ -49,6 +52,13 @@ export default function Response({ answer, isAI, derivedSentences, score, bettin
                 setCorrectText(true)
             } else {
                 setIncorrectText(true)
+            }
+
+            if (correct && betAmt == score) {
+                setShowJames(true) 
+                setTimeout(() => {
+                    setShowJames(false)
+                }, 1000)
             }
         }
     }
@@ -82,6 +92,7 @@ export default function Response({ answer, isAI, derivedSentences, score, bettin
 
     return (
         <div className={styles.responseContainer}>
+            { showJames && <Image alt="james" className={styles.james} src={james} /> }
             <div className={styles.response}>
                 { text ? (
                     <div className={styles.responseInput}>
