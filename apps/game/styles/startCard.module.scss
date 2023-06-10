@@ -1,0 +1,40 @@
+@import "./variables.module.scss";
+
+.startCard {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 500px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 300px;
+    box-shadow: 0 0 10px 5px #D9D9D9;
+
+    button {
+        padding: 10px;
+        background-color: $main-color;
+        border-radius: 10px;
+        width: 100%;
+        color: white;
+        border: none;
+    }
+
+    button:hover {
+        cursor: pointer;
+    }
+
+    h1,
+    .settingsText {
+        text-align: center;
+    }
+
+    .settingsText {
+        margin-top: 5px;
+    }
+
+    .settingsText:hover {
+        cursor: pointer;
+    }
+}

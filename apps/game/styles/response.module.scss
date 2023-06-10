@@ -1,0 +1,53 @@
+@import "./variables.module.scss";
+
+.responseContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .response {
+        display: flex;
+        flex-direction: row;
+        width: 600px;
+
+        .responseInput {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .possibleAnswer {
+            margin: 0 10px;
+            flex: 1;
+            background-color: white;
+            padding: 10px;
+            border: 1px solid transparent;
+        }
+
+        .green {
+            color: white;
+            background-color: #59E8B5;
+        }
+
+        .red {
+            color: white;
+            background-color: #FF725B;
+        }
+
+        .greenInput {
+            border: 1px solid #59E8B5 !important;
+        }
+
+        .redInput {
+            border: 1px solid #FF725B !important;
+        }
+
+        .error {
+            color: #FF725B;
+        }
+
+        .possibleAnswer:hover {
+            cursor: pointer;
+            border: 1px solid $main-color;
+        }
+    }
+}

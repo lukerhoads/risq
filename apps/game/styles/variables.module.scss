@@ -1,0 +1,17 @@
+$background-color: #f6f7fb;
+$header-outline-color: #f5f6f9;
+$icon-color: #586380;
+$text-color: #131B30;
+$progress-active-color: #e372ff;
+$progress-inactive-color: #f6d9ff;
+$main-color: #4255FF;
+
+:export {
+  backgroundColor: $background-color;
+  headerOutlineColor: $header-outline-color;
+  iconColor: $icon-color;
+  textColor: $text-color;
+  progressActiveColor: $progress-active-color;
+  progressInactiveColor: $progress-inactive-color;
+  mainColor: $main-color;
+}
