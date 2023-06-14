@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "yarn prettier --write ."
+    "format": "yarn prettier --write .",
+    "test": "jest"
   },
   "dependencies": {
     "dataset": "*",
@@ -19,14 +20,17 @@
     "react-transition-group": "^4.4.5"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.2",
     "@types/js-levenshtein": "^1.1.1",
     "@types/node": "^17.0.12",
     "@types/react": "^18.0.22",
     "@types/react-dom": "^18.0.7",
     "@types/react-transition-group": "^4.4.6",
     "eslint-config-custom": "*",
+    "jest": "^29.5.0",
     "prettier": "^2.8.8",
     "sass": "^1.62.1",
+    "ts-jest": "^29.1.0",
     "tsconfig": "*",
     "typescript": "^4.5.3"
   }

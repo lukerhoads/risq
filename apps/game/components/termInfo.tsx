@@ -1,12 +1,4 @@
-import {
-  StudiableCardSideLabel,
-  StudiableItem,
-  SerializedMedia,
-  SerializedMediaText,
-  MediaType,
-} from 'dataset/types';
 import styles from '../styles/termInfo.module.scss';
-import { useEffect, useState } from 'react';
 
 interface TermInfoProps {
   question: string;

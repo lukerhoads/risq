@@ -1,16 +1,15 @@
-import Fun from 'dataset/sets/Fun';
+import Quizlet from 'dataset';
 import Header from '../components/header';
 import { SwitchTransition, CSSTransition } from 'react-transition-group';
-import { MediaType, StudiableCardSideLabel } from 'dataset/types';
 import { useEffect, useRef, useState } from 'react';
 import StartCard from '../components/startCard';
 import TermInfo from '../components/termInfo';
 import Response from '../components/response';
-import { aiOptions } from '../ai/mock';
+import { aiOptions, aiReverseOptions } from '../ai/mock';
 import {
   extractCard,
   genPossibleAnswers,
-  genRandomIndex,
+  getDefinitions,
   getRandomFromArr,
   getResponses,
   removeFromArr,
@@ -18,23 +17,25 @@ import {
 } from '../util';
 import { defaultSettings } from '../types/settings';
 import Settings from '../components/settings';
+import FinishCard from '../components/finishCard';
+
+// Proper usage of test cases - still want to test at least a bit of DOM
 
 // TODO:
-// - If AI sentence, remove questions from second phase that were answered incorrectly
-// - Scoring based on accuracy pctg rather than actual score (so doesn't have to be normalized)
+// - Answer with term or definition - still need to implement here
 
-// Proper usage of test cases
-// Appropriate amount of documentation and comments
-// - How to play document
-// - Sufficient comments for every function and documentation on how to run
+const QUIZLET_SETS = Quizlet.getAllSets();
 
 export default function Game() {
-  const { disneyPrincessTrivia: quizletSet } = Fun.getAllSetsMap();
   let timer = null;
 
+  const [showFinishCard, setShowFinishCard] = useState(false)
+  const [quizletSetIdx, setQuizletSetIdx] = useState(0);
+  const [quizletSet, setQuizletSet] = useState(QUIZLET_SETS[quizletSetIdx]);
   const [showSettings, setShowSettings] = useState(false);
   const [settings, setSettings] = useState(defaultSettings);
   const [allResponses, setAllResponses] = useState([]);
+  const [allDefinitions, setAllDefinitions] = useState([]);
   const [gameStarted, setGameStarted] = useState(false);
   const [timerElapsed, setTimerElapsed] = useState(0);
   const [timerTotal, setTimerTotal] = useState(0);
@@ -57,6 +58,11 @@ export default function Game() {
   const [derivedSentences, setDerivedSentences] = useState({});
 
   const nodeRef = useRef(null);
+
+  const onSetQuizletSet = set => {
+    setQuizletSetIdx(set);
+    setQuizletSet(QUIZLET_SETS[set]);
+  };
 
   // updateCount updates the question timer.
   const updateCount = () => {
@@ -101,7 +107,6 @@ export default function Game() {
   // length.
   const genNewItem = (right: boolean, nSIL, nIAQL) => {
     if (settings.aiSentencePhase && gamePhase == 2) {
-      console.log('Pulling from genned sentences.');
       let derivedKeys = Object.keys(derivedSentences);
       if (derivedKeys.length > 0) {
         return derivedSentences[getRandomFromArr(derivedKeys)].item;
@@ -110,6 +115,8 @@ export default function Game() {
       return null;
     }
 
+    // selectNew is a convenient method that aids in the selection of a new
+    // activeItem.
     const selectNew = (from: any[], exclude?: any[]) => {
       if (from.length == 1) {
         if (exclude && exclude.includes(from[0])) return null;
@@ -118,7 +125,6 @@ export default function Game() {
 
       let newItem = getRandomFromArr(from);
       while (newItem == activeItem || (exclude && exclude.includes(newItem))) {
-        console.log('Forkbomb');
         newItem = getRandomFromArr(from);
       }
 
@@ -144,14 +150,12 @@ export default function Game() {
     return selectNew(selectedItems, incorrectlyAnsweredQuestions);
   };
 
-  // onAnswer updates the state of the game when the user answers a
-  // question.
+  // onAnswer updates the state of the game when the user answers a question.
   const onAnswer = (
     right: boolean,
     betAmount: number | undefined,
     response: string | undefined
   ) => {
-    console.log('Called onAnswer, ', right);
     setTimeout(() => {
       let scoreUpdate = 0;
       let nSIL = selectedItems.length;
@@ -162,7 +166,6 @@ export default function Game() {
         // betAmount and response must be defined
         if (gamePhase == 1 && response) {
           if (right) {
-            console.log('Adding ', answer, ' to derivedSentences');
             setDerivedSentences(prev => {
               let prevState = Object.assign({}, prev);
               prevState[answer] = {
@@ -226,13 +229,11 @@ export default function Game() {
       // gamePhase 2 -> no betting but add prev scores, only select based on correct sentences
       setPreviousScore(prev => prev + scoreUpdate);
       if (betting && (score + scoreUpdate <= 0 || nSIL - nIAQL <= 0)) {
-        console.log('Caught here');
         partReset();
         return;
       }
 
       let nextItem = genNewItem(right, nSIL, nIAQL);
-      console.log('Setting new item to ', nextItem);
       setScore(prev => prev + scoreUpdate);
       setTimerElapsed(0);
       setActiveItem(nextItem);
@@ -293,7 +294,12 @@ export default function Game() {
     }
 
     setAllResponses(getResponses(quizletSet));
+    setAllDefinitions(getDefinitions(quizletSet));
   }, [selectedItems]);
+
+  useEffect(() => {
+    setShowFinishCard(!gameStarted && previousScore != undefined && !Number.isNaN(previousScore))
+  }, [previousScore, gameStarted])
 
   useEffect(() => {
     if (!activeItem) {
@@ -321,8 +327,13 @@ export default function Game() {
         setAnswer(card.answer);
       }
     } else {
-      setQuestion(card.question);
-      setAnswer(card.answer);
+      if (settings.answerWithTerm) {
+        setQuestion(card.question);
+        setAnswer(card.answer);
+      } else {
+        setQuestion(card.answer)
+        setAnswer(card.question)
+      }
     }
   }, [activeItem, gamePhase]);
 
@@ -341,9 +352,17 @@ export default function Game() {
     if (!text && answer != '') {
       let possibleAnsws = [];
       if (settings.aiGeneratedOptions) {
-        possibleAnsws = [...aiOptions(answer, question), answer];
+        if (settings.answerWithTerm) {
+          possibleAnsws = [...aiOptions(answer, question), answer];
+        } else {
+          possibleAnsws = [...aiReverseOptions(answer, question), answer];
+        }
       } else {
-        possibleAnsws = genPossibleAnswers(allResponses, answer);
+        if (settings.answerWithTerm) {
+          possibleAnsws = genPossibleAnswers(allResponses, answer);
+        } else {
+          possibleAnsws = genPossibleAnswers(allDefinitions, answer);
+        }
       }
 
       shuffleArray(possibleAnsws);
@@ -379,6 +398,7 @@ export default function Game() {
           onClose={onSettingsClick}
           settings={settings}
           setSettings={setSettings}
+          selectedSet={quizletSetIdx}
         />
       )}
       {gameStarted ? (
@@ -427,11 +447,17 @@ export default function Game() {
         </>
       ) : (
         <>
-          <StartCard
-            onSettingsClick={onSettingsClick}
-            onStart={onStart}
-            previousScore={previousScore}
-          />
+          {showFinishCard ? (
+            <FinishCard previousScore={previousScore} onReturn={() => setShowFinishCard(false)} />
+          ) : (
+            <StartCard
+              quizletSet={quizletSetIdx}
+              setQuizletSet={onSetQuizletSet}
+              onSettingsClick={onSettingsClick}
+              onStart={onStart}
+            />
+          )}
+          
         </>
       )}
     </div>

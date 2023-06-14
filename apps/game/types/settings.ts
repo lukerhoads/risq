@@ -3,6 +3,7 @@ export interface Settings {
   questionDuration: number;
   aiGeneratedOptions: boolean;
   aiSentencePhase: boolean;
+  answerWithTerm: boolean;
 }
 
 export const defaultSettings: Settings = {
@@ -10,4 +11,5 @@ export const defaultSettings: Settings = {
   questionDuration: 10,
   aiGeneratedOptions: false,
   aiSentencePhase: false,
+  answerWithTerm: true,
 };

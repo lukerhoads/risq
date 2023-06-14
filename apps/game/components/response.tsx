@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import styles from '../styles/response.module.scss';
 import { closeEnough } from '../util';
 import { aiSentenceGrade } from '../ai/mock';
-import james from '../gifs/james.gif';
+import james from '../images/james.gif';
 import Image from 'next/image';
 
 type DerivedSentence = {

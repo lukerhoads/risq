@@ -12,6 +12,14 @@
   min-width: 300px;
   box-shadow: 0 0 10px 5px #d9d9d9;
 
+  select {
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
   button {
     padding: 10px;
     background-color: $main-color;
@@ -36,5 +44,12 @@
 
   .settingsText:hover {
     cursor: pointer;
+  }
+}
+
+@media (max-width: 400px) {
+  .startCard {
+    width: 80vw;
+    min-width: unset;
   }
 }

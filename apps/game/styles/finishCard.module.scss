@@ -1,0 +1,69 @@
+@import './variables.module.scss';
+
+.finishCard {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 500px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 300px;
+    box-shadow: 0 0 10px 5px #d9d9d9;
+
+    .celebrationWrapper {
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 10px;
+        justify-content: space-between;
+
+        .scoreWrapper {
+            display: flex;
+            flex-direction: column;
+            margin: 0 10px;
+        }
+
+        .second {
+            transform: scaleX(-1);
+        }
+    }
+
+    h1,
+    p {
+        text-align: center;
+    }
+
+    p {
+        margin-top: 5px;
+    }
+
+    .settingsText:hover {
+        cursor: pointer;
+    }
+
+    img {
+        width: 120px;
+        height: 100px;
+    }
+
+    .returnText:hover {
+        cursor: pointer;
+    }
+}
+
+@media (max-width: 400px) {
+    .finishCard {
+        width: 80vw;
+        min-width: unset;
+    }
+}
+
+@media (max-width: 470px) {
+    .finishCard {
+        img {
+            width: 60px;
+            height: 50px
+        }
+    }
+}

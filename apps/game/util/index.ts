@@ -29,6 +29,11 @@ export const closeEnough = (arg1: string, arg2: string) => {
   return similarity > 0.7;
 };
 
+// getRandomFromArr is a utility that retrieves a random element from an array.
+export const getRandomFromArr = (arr: any[]) => {
+  return arr[genRandomIndex(arr.length)];
+};
+
 // getResponses gets the text responses from the quizletSet
 export const getResponses = set => {
   let responses = [];
@@ -47,6 +52,26 @@ export const getResponses = set => {
   }
 
   return responses;
+};
+
+// getDefinitions gets the text definitions from the quizletSet
+export const getDefinitions = set => {
+  let definitions = [];
+  for (let item of set.studiableItem) {
+    for (let entry of item.cardSides) {
+      const { label, media } = entry;
+      if (label == StudiableCardSideLabel.DEFINITION) {
+        for (let med of media) {
+          switch (med.type) {
+            case MediaType.TEXT:
+              definitions.push(med.plainText);
+          }
+        }
+      }
+    }
+  }
+
+  return definitions;
 };
 
 export interface Card {
@@ -106,9 +131,4 @@ export const genPossibleAnswers = (allResponses, answer) => {
   }
   answers.push(answer);
   return answers;
-};
-
-// getRandomFromArr is a utility that retrieves a random element from an array.
-export const getRandomFromArr = (arr: any[]) => {
-  return arr[genRandomIndex(arr.length)];
 };

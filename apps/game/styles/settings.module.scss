@@ -1,3 +1,5 @@
+@import "./variables.module.scss";
+
 .settings {
   position: absolute;
   top: 50%;
@@ -18,8 +20,47 @@
     justify-content: space-between;
   }
 
+  .option {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+
   img {
     width: 20px;
     height: 20px;
+  }
+
+  .toggleContainer {
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+
+    p {
+      vertical-align: middle;
+    }
+  }
+
+  .red {
+    color: $error-color;
+  }
+}
+
+@media (max-width: 600px) {
+  .settings {
+    min-width: 80%;
+
+    .toggleContainer {
+      width: 80%;
+    }
+  }
+}
+
+@media (max-width: 400px) {
+  .settings {
+    .toggleContainer {
+      width: 100%;
+    }
   }
 }
