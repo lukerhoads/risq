@@ -1,61 +1,82 @@
-@import "./variables.module.scss";
+@import './variables.module.scss';
 
 .responseContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-    .response {
-        display: flex;
-        flex-direction: row;
-        width: 600px;
+  .james {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0.3;
+  }
 
-        .james {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-        }
+  .response {
+    width: 600px;
 
-        .responseInput {
-            display: flex;
-            flex-direction: column;
-        }
+    .responseInput {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
 
-        .possibleAnswer {
-            margin: 0 10px;
-            flex: 1;
-            background-color: white;
-            padding: 10px;
-            border: 1px solid transparent;
-        }
-
-        .green {
-            color: white;
-            background-color: #59E8B5;
-        }
-
-        .red {
-            color: white;
-            background-color: #FF725B;
-        }
-
-        .greenInput {
-            border: 1px solid #59E8B5 !important;
-        }
-
-        .redInput {
-            border: 1px solid #FF725B !important;
-        }
-
-        .error {
-            color: #FF725B;
-        }
-
-        .possibleAnswer:hover {
-            cursor: pointer;
-            border: 1px solid $main-color;
-        }
+      input {
+        width: 100%;
+      }
     }
+
+    .responseChoices {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .possibleAnswer {
+      margin: 0 10px;
+      flex: 1;
+      background-color: white;
+      padding: 10px;
+      border: 1px solid transparent;
+    }
+
+    .possibleAnswer:hover {
+      cursor: pointer;
+      border: 1px solid $main-color;
+    }
+
+    @media (max-width: 640px) {
+      width: 90%;
+
+      .responseChoices {
+        flex-direction: column;
+      }
+
+      .possibleAnswer {
+        flex-grow: 1;
+        margin: 0;
+        margin-bottom: 10px !important;
+      }
+    }
+
+    .green {
+      color: white;
+      background-color: #59e8b5;
+    }
+
+    .red {
+      color: white;
+      background-color: $error-color;
+    }
+
+    .greenInput {
+      border: 1px solid #59e8b5 !important;
+    }
+
+    .redInput {
+      border: 1px solid $error-color !important;
+    }
+  }
 }

@@ -1,4 +1,4 @@
-@import "./variables.module.scss";
+@import './variables.module.scss';
 
 @font-face {
   font-family: 'Hurme Geometric Sans';
@@ -56,7 +56,7 @@ p {
 input {
   flex: 1;
   padding: 10px;
-  border: 1px solid #E3E6EE;
+  border: 1px solid #e3e6ee;
 }
 
 input:focus {
@@ -74,4 +74,8 @@ button {
 
 button:hover {
   cursor: pointer;
+}
+
+.error {
+  color: $error-color;
 }
