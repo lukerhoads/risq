@@ -27,6 +27,7 @@ interface ResponseProps {
   derivedSentences: DerivedSentences;
   isAI: boolean;
   answer: string;
+  transitioning: boolean;
 }
 
 export default function Response({
@@ -39,6 +40,7 @@ export default function Response({
   possibleAnswers,
   onAnswer,
   correctAnswer,
+  transitioning,
 }: ResponseProps) {
   if (!text && !possibleAnswers) return null;
   const [showJames, setShowJames] = useState(false);
@@ -64,7 +66,6 @@ export default function Response({
       let correct = isAI
         ? aiSentenceGrade(answer, textResponse)
         : closeEnough(textResponse, correctAnswer);
-      console.log('Correct: ', correct);
       onAnswer(correct, betAmt, textResponse);
       if (correct) {
         setCorrectText(true);
@@ -85,6 +86,10 @@ export default function Response({
 
   // onChoiceClicked reacts to a multiple choice selection.
   const onChoiceClicked = idx => {
+    if (transitioning) {
+      return;
+    }
+
     if (!text) {
       onAnswer(idx === correctAnswer);
       if (idx === correctAnswer) {
@@ -119,6 +124,7 @@ export default function Response({
         {text ? (
           <div className={styles.responseInput}>
             <input
+              disabled={transitioning}
               autoFocus
               placeholder="Response"
               value={textResponse}
@@ -130,6 +136,7 @@ export default function Response({
             />
             {betting && (
               <input
+                disabled={transitioning}
                 placeholder="Bet amount"
                 value={betAmount}
                 onChange={verifyAndSetBet}

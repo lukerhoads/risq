@@ -56,6 +56,7 @@ export default function Game() {
   const [possibleAnswers, setPossibleAnswers] = useState([]);
   const [previousScore, setPreviousScore] = useState(null);
   const [derivedSentences, setDerivedSentences] = useState({});
+  const [transitioning, setTransitioning] = useState(false)
 
   const nodeRef = useRef(null);
 
@@ -156,6 +157,7 @@ export default function Game() {
     betAmount: number | undefined,
     response: string | undefined
   ) => {
+    setTransitioning(true)
     setTimeout(() => {
       let scoreUpdate = 0;
       let nSIL = selectedItems.length;
@@ -237,6 +239,7 @@ export default function Game() {
       setScore(prev => prev + scoreUpdate);
       setTimerElapsed(0);
       setActiveItem(nextItem);
+      setTransitioning(false)
     }, 500);
   };
 
@@ -428,6 +431,7 @@ export default function Game() {
                     score={score}
                   />
                   <Response
+                    transitioning={transitioning}
                     answer={answer}
                     isAI={settings.aiSentencePhase}
                     derivedSentences={derivedSentences}
