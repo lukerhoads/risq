@@ -232,6 +232,7 @@ export default function Game() {
       setPreviousScore(prev => prev + scoreUpdate);
       if (betting && (score + scoreUpdate <= 0 || nSIL - nIAQL <= 0)) {
         partReset();
+        setTransitioning(false)
         return;
       }
 
